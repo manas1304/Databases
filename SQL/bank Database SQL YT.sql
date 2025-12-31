@@ -278,7 +278,43 @@ select * from employees where salary = (select max(salary) from employees);
 
 
 
+-------------------- CASE Expression -------------------------
 
+select fname, salary,
+case 
+	when salary >= 50000 then 'High'
+	else 'Low'
+end as salary_category
+from employees;
+
+--- multiple cases
+
+select fname, salary,
+case
+	when salary <= 45000 then 'Low'
+	when salary > 45000 and salary <50000 then 'Mid'
+	else 'High'
+end as salary_category
+from employees;
+
+
+---------- Task ----------
+
+select fname, salary,
+case
+	when salary > 0 then Round(salary*0.1)
+end as bonus
+from employees;
+
+
+select 
+case 
+	when salary >= 60000 then 'High'
+	when salary >= 50000 and salary < 60000 then 'mid'
+	else 'low'
+end as salary_category, count(emp_id)
+from employees
+group by salary_category;
 
 
 
