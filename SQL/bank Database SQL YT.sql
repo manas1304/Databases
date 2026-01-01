@@ -318,6 +318,27 @@ group by salary_category;
 
 
 
+---------------------- Relationship and it's types --------------
+-- in a big corporate company there is not just one table employees 
+-- but there are many tables and huge amount of data is there
+
+----- Types of Relationships
+-- 1. One to One -- When one table connects to only 1 other table
+-- 2. One to Many -- Suppose one employee does many tasks so one person does many tasks 
+-- 3. Many to Many -- Suppose one book is written by author 1 and author 2 but there might be case where 
+-- author 1 has other books written by himself as well
+
+
+--- Foreign Key --------
+
+-- If we use a primary key of another table into the current table 
+-- then that column is referred as Foreign Key
+
+
+
+
+
+
 
 
 
