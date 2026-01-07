@@ -352,11 +352,43 @@ group by salary_category;
 -- Set of Sql statements and procedural logic that perform operations such as 
 -- inserting, deleting, and querying data.
 
+select * from employees;
+
+CREATE OR REPLACE PROCEDURE update_emp_salary(
+    p_employee_id INT,
+    p_new_salary NUMERIC
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE employees
+    SET salary = p_new_salary
+    WHERE emp_id = p_employee_id;
+END;
+$$;
+
+call update_emp_salary(3, 71000);
 
 
+create or replace procedure add_employee(
+	p_emp_id integer,
+	p_fname varchar,
+	p_lname varchar,
+	p_email varchar,
+	p_dept varchar,
+	p_salary numeric
+)
+language plpgsql
+as $$
+begin
+	insert into employees(emp_id,fname, lname, email, dept, salary)
+	values(p_emp_id, p_fname, p_lname, p_email, p_dept, p_salary);
+end;
+$$;
 
+call add_employee(11,'Aman', 'Gupta', 'amangupta@gmail.com', 'Finance', 49000);
 
-
+select * from employees;
 
 
 
