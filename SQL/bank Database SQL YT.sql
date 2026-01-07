@@ -336,6 +336,24 @@ group by salary_category;
 
 
 
+-------------- Stored Routines -------------- 
+-- An SQL statement or a set of SQL statement 
+-- which can be stored on a database server 
+-- that can be called no. of times 
+-- (basically we store the queries we want to run again and again)
+
+
+---------------- Two types of Stored Routines --------------------
+--1. Stored Procedure
+--2. User Defined Functions
+
+-- 1. Stored Procedure 
+
+-- Set of Sql statements and procedural logic that perform operations such as 
+-- inserting, deleting, and querying data.
+
+
+
 
 
 
