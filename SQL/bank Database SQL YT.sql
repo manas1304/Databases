@@ -391,16 +391,113 @@ call add_employee(11,'Aman', 'Gupta', 'amangupta@gmail.com', 'Finance', 49000);
 select * from employees;
 
 
+--------------- User Defined Functions --------------
+-- Customer functions created by the user 
+-- to perform specific operations and return a value
+
+select * from employees;
+
+-- Q1 - Find name of employees in each dept having max salary
+
+-- Method 1: Subquery
+
+select e.emp_id, e.fname, e.salary
+from employees e
+where e.dept = 'HR'
+and 
+e.salary = (
+select max(emp.salary) 
+from employees emp
+where emp.dept = 'HR'
+);
+
+-- So for this type of long query we will create a function
+
+CREATE OR REPLACE FUNCTION dept_max_sal_emp1(dept_name VARCHAR)
+RETURNS TABLE(emp_id INT, fname VARCHAR, salary NUMERIC) 
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        e.emp_id,  e.fname, e.salary
+    FROM 
+        employees e
+    WHERE 
+        e.dept = dept_name -- this dept name is taken from the user
+        AND e.salary = (
+            SELECT MAX(emp.salary)
+            FROM employees emp
+            WHERE emp.dept = dept_name
+        );
+END;
+$$ LANGUAGE plpgsql;
+
+
+select * from dept_max_sal_emp1('Finance');
+
+select * from dept_max_sal_emp1('HR');
 
 
 
+---------------- Window Functions -----------------
+-- Window functions, also known as analytic functions
+-- allows you to perform calculations accross a set of rows
+-- related on the current row
+
+-- defined by an OVER() clause
+
+select fname, salary,
+sum(salary) over(order by salary)
+from employees;
 
 
+----------------- Benefits of Window Functions ----------------
+
+-- 1. Advanced Analytics
+--Running totals, moving averages, rank calculations, and cumulative distributions
+
+-- 2. Non Aggregrating
+-- Unlike aggregate functions, window functions don't collapse rows
+-- This means we can calculate aggregates while retaining individual row details
+
+-- 3. Flexibility
+-- Can be used in a lot of SQL queries, hencing providing flexibility in writing queries
+
+-- Row Number , Rank, DenseRank 
+
+select 
+row_number() over(order by salary),
+fname, dept, salary 
+from employees;
+
+-- Partition By 
+select 
+row_number() over(partition by salary),
+fname, dept, salary 
+from employees;
+
+-- Ranks
+select 
+fname, salary,
+rank() over(order by salary desc)
+from employees;
+
+-- Dense Rank
+select fname, salary,
+dense_rank() over(order by salary desc)
+from employees;
 
 
+-- Lag
+
+select fname, salary,
+lag(salary) over()
+from employees;
 
 
+-- Lead
 
-
-
+select fname, salary,
+lead(salary) over()
+from employees;
 
