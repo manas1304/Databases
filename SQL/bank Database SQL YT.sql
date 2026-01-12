@@ -501,3 +501,70 @@ select fname, salary,
 lead(salary) over()
 from employees;
 
+
+--------------- Common Table Expression ( CTE ) -----------------------
+
+-- CTE is a temporary result set that you can define within a query to simplify complex
+-- SQL Statements
+--- Point--- One CTE created can only be used once. It will not be persisted.
+
+-- Use case 1 
+-- We want to calculate the average salary per deparment
+-- and then find all the employees whose salary is above the average salary of that department
+
+
+select * from employees;
+
+select dept, avg(salary) from employees group by dept;
+
+with avg_sal as (
+select dept, avg(salary) as avg_salary from employees group by dept
+)
+
+select e.emp_id, e.fname, e.dept, e.salary, a.avg_salary
+from employees e 
+join avg_sal a on e.dept = a.dept
+where e.salary > a.avg_salary;
+
+
+-- Use case 2
+-- We want to fing the highest paid employee in each department
+with max_salary as(
+select dept, max(salary) as max_salary from employees group by dept
+)
+
+select e.emp_id, e.fname, e.dept, e.salary
+from employees e 
+join max_salary m on m.dept = e.dept
+where e.salary = m.max_salary;
+
+
+--------------- Triggers -----------------------
+-- Trigger are special procedures in a database that automatically execute 
+-- predefined actions in response to certain events on a specified table or view.
+
+-- Use case
+-- Create a trigger so that
+-- 1. If we insert/update negative salary in a table, it will be triggered and set it to 0.
+
+call update_emp_salary(1, -52000);
+select * from employees;
+
+create or replace function check_salary()
+returns trigger as $$
+begin
+	if new.salary < 0 then
+ 		new.salary = 0;
+	end if;
+	return new;
+end;
+$$ language plpgsql;
+
+
+--- Creating trigger and calling function created above
+create trigger before_update_salary
+before update on employees
+for each row
+execute function check_salary();
+
+-- plpgsql means -- Procedural language postgre sql.
